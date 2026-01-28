@@ -1,0 +1,26 @@
+﻿@model MVC.Models.LabInfoViewModel
+
+<h2>Інформація про лабораторну роботу</h2>
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Параметр</th>
+        <th>Значення</th>
+    </tr>
+    <tr>
+        <td>Номер лабораторної роботи</td>
+        <td>@Model.LabNumber</td>
+    </tr>
+    <tr>
+        <td>Тема</td>
+        <td>@Model.Topic</td>
+    </tr>
+    <tr>
+        <td>Мета</td>
+        <td>@Model.Purpose</td>
+    </tr>
+    <tr>
+        <td>Студент</td>
+        <td>@Model.StudentName</td>
+    </tr>
+</table>
