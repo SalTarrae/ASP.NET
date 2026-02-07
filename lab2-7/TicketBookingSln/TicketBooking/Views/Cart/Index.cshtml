@@ -1,0 +1,50 @@
+﻿@model TicketBooking.Models.Cart
+
+<h2>Your Booking</h2>
+
+@if (!Model.Lines.Any())
+{
+    <div class="alert alert-info">Your booking cart is empty.</div>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Event</th>
+            <th class="text-center">Qty</th>
+            <th class="text-end">Price</th>
+            <th class="text-end">Total</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var line in Model.Lines)
+        {
+            <tr>
+                <td>@line.Event.Title</td>
+                <td class="text-center">@line.Quantity</td>
+                <td class="text-end">@line.Event.BaseTicketPrice.ToString("c")</td>
+                <td class="text-end">@((line.Event.BaseTicketPrice * line.Quantity).ToString("c"))</td>
+                <td class="text-end">
+                    <form asp-action="RemoveFromCart" method="post">
+                        <input type="hidden" name="eventId" value="@line.Event.EventId" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+            <td class="text-end"><strong>@Model.ComputeTotalValue().ToString("c")</strong></td>
+            <td></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <form asp-action="Clear" method="post">
+        <button class="btn btn-warning">Clear</button>
+    </form>
+}
