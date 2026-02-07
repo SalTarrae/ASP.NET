@@ -11,23 +11,30 @@ namespace TicketBooking.Controllers {
 			_repository = repository;
 		}
 
-		public IActionResult Index(int pageNum = 1) {
-			var query = _repository.Events.OrderBy(e => e.EventId);
+		public IActionResult Index(string? location, int pageNum = 1) {
+			var query = _repository.Events;
 
-			var totalItems = query.Count();
+			if (!string.IsNullOrWhiteSpace(location)) {
+				query = query.Where(e => e.Location == location);
+			}
+
+			query = query.OrderBy(e => e.EventId);
+
+			int totalItems = query.Count();
 
 			var eventsOnPage = query
 				.Skip((pageNum - 1) * PageSize)
 				.Take(PageSize)
 				.ToList();
-				 
+
 			var model = new EventsListViewModel {
 				Events = eventsOnPage,
 				PagingInfo = new PagingInfo {
 					CurrentPage = pageNum,
 					ItemsPerPage = PageSize,
 					TotalItems = totalItems
-				}
+				},
+				CurrentLocation = location
 			};
 
 			return View(model);

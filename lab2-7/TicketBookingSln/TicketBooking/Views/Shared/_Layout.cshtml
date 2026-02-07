@@ -16,12 +16,23 @@
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     TicketBooking
                 </a>
+                <a class="btn btn-outline-light" asp-controller="Cart" asp-action="Index">
+                    Booking
+                </a>
             </div>
         </nav>
     </header>
 
-    <main class="container mt-4">
-        @RenderBody()
+    <main class="container-fluid mt-4">
+        <div class="row">
+            <aside class="col-12 col-md-3 col-lg-2 mb-3">
+                @await Component.InvokeAsync("NavigationMenu")
+            </aside>
+
+            <section class="col-12 col-md-9 col-lg-10">
+                @RenderBody()
+            </section>
+        </div>
     </main>
 
     <footer class="bg-light text-center text-muted mt-5 py-3 border-top">
