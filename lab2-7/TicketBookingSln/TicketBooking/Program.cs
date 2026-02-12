@@ -19,6 +19,7 @@ builder.Services.AddDbContext<TicketBookingDbContext>(opts => {
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
 builder.Services.AddScoped<IEventRepository, EFEventRepository>();
+builder.Services.AddScoped<IBookingRepository, EFBookingRepository>();
 
 var app = builder.Build();
 

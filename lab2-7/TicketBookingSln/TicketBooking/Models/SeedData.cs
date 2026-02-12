@@ -44,6 +44,56 @@ namespace TicketBooking.Models {
 
 				context.SaveChanges();
 			}
+
+			if (!context.Bookings.Any()) {
+				var firstEvent = context.Events.OrderBy(e => e.EventId).FirstOrDefault();
+				var secondEvent = context.Events.OrderBy(e => e.EventId).Skip(1).FirstOrDefault();
+				var thirdEvent = context.Events.OrderBy(e => e.EventId).Skip(2).FirstOrDefault();
+
+				var bookings = new List<Booking>();
+
+				if (firstEvent != null) {
+					bookings.AddRange(new[] {
+						new Booking
+						{
+							CustomerName = "Denys Test",
+							CustomerEmail = "denys.test@example.com",
+							Quantity = 2,
+							EventId = firstEvent.EventId ?? 0
+						},
+						new Booking
+						{
+							CustomerName = "Anna Test",
+							CustomerEmail = "anna.test@example.com",
+							Quantity = 1,
+							EventId = firstEvent.EventId ?? 0
+						}
+					});
+				}
+
+				if (secondEvent != null) {
+					bookings.Add(new Booking {
+						CustomerName = "Ivan Test",
+						CustomerEmail = "ivan.test@example.com",
+						Quantity = 3,
+						EventId = secondEvent.EventId ?? 0
+					});
+				}
+
+				if (thirdEvent != null) {
+					bookings.Add(new Booking {
+						CustomerName = "Olha Test",
+						CustomerEmail = "olha.test@example.com",
+						Quantity = 1,
+						EventId = thirdEvent.EventId ?? 0
+					});
+				}
+
+				if (bookings.Count > 0) {
+					context.Bookings.AddRange(bookings);
+					context.SaveChanges();
+				}
+			}
 		}
 	}
 }
