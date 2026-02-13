@@ -1,0 +1,40 @@
+﻿@model Booking
+
+<form asp-action="@ViewContext.RouteData.Values["action"]" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="CustomerName" class="form-label"></label>
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CustomerEmail" class="form-label"></label>
+        <input asp-for="CustomerEmail" class="form-control" />
+        <span asp-validation-for="CustomerEmail" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="EventId" class="form-label">Event</label>
+        <select asp-for="EventId" class="form-select" asp-items="ViewBag.Events"></select>
+        <span asp-validation-for="EventId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Quantity" class="form-label"></label>
+        <input asp-for="Quantity" class="form-control" />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="BookingId" />
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

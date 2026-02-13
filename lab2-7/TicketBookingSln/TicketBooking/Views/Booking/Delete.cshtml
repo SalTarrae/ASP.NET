@@ -1,0 +1,23 @@
+﻿@model Booking
+
+<h2>Delete Booking</h2>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete this booking?
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <div><b>Customer:</b> @Model.CustomerName</div>
+        <div><b>Email:</b> @Model.CustomerEmail</div>
+        <div><b>Event:</b> @Model.Event?.Title</div>
+        <div><b>Qty:</b> @Model.Quantity</div>
+    </div>
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.BookingId" />
+    <button type="submit" class="btn btn-danger">Yes, delete</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+</form>

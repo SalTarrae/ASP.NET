@@ -1,0 +1,18 @@
+﻿@model Booking
+
+<h2>Booking Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <div><b>Customer:</b> @Model.CustomerName</div>
+        <div><b>Email:</b> @Model.CustomerEmail</div>
+        <div><b>Quantity:</b> @Model.Quantity</div>
+        <div><b>Event:</b> @Model.Event?.Title</div>
+        <div><b>Created:</b> @Model.CreatedAtUtc.ToString("u")</div>
+    </div>
+</div>
+
+<p class="mt-3">
+    <a class="btn btn-secondary" asp-action="Index">Back</a>
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.BookingId">Edit</a>
+</p>

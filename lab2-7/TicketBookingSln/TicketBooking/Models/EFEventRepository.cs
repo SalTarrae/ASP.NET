@@ -7,5 +7,20 @@
 		}
 
 		public IQueryable<Event> Events => _context.Events;
+
+		public void CreateEvent(Event e) {
+			_context.Events.Add(e);
+			_context.SaveChanges();
+		}
+
+		public void UpdateEvent(Event e) {
+			_context.Events.Update(e);
+			_context.SaveChanges();
+		}
+
+		public void DeleteEvent(Event e) {
+			_context.Events.Remove(e);
+			_context.SaveChanges();
+		}
 	}
 }

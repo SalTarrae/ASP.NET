@@ -1,0 +1,18 @@
+﻿@model Event
+
+<h2>Event Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h4>@Model.Title</h4>
+        <p>@Model.Description</p>
+        <div><b>Location:</b> @Model.Location</div>
+        <div><b>Date:</b> @Model.StartDate.ToString("yyyy-MM-dd HH:mm")</div>
+        <div><b>Price:</b> @Model.BaseTicketPrice.ToString("c")</div>
+    </div>
+</div>
+
+<p class="mt-3">
+    <a class="btn btn-secondary" asp-action="Index">Back</a>
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.EventId">Edit</a>
+</p>
