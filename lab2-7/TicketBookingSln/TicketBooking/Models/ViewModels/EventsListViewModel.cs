@@ -1,4 +1,6 @@
-﻿namespace TicketBooking.Models.ViewModels {
+﻿using TicketBooking.Data.Models;
+
+namespace TicketBooking.Models.ViewModels {
 	public class EventsListViewModel {
 		public IEnumerable<Event> Events { get; set; } = Enumerable.Empty<Event>();
 		public PagingInfo PagingInfo { get; set; } = new PagingInfo();

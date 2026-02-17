@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TicketBooking.Models;
+using TicketBooking.Data.Repositories;
 using TicketBooking.Models.ViewModels;
 
 namespace TicketBooking.Components {

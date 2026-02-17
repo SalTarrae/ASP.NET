@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TicketBooking.Data.Contexts;
+using TicketBooking.Data.Models;
 
-namespace TicketBooking.Models {
+namespace TicketBooking.Data.Repositories {
 	public class EFBookingRepository : IBookingRepository {
 		private readonly TicketBookingDbContext _context;
 

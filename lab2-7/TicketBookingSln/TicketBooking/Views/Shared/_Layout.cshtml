@@ -16,40 +16,58 @@
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     TicketBooking
                 </a>
-                <a class="btn btn-outline-light" asp-controller="Cart" asp-action="Index">
-                    Booking
-                </a>
-            </div>
-            <div class="dropdown">
-                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Admin
-                </button>
+                <div class="w-50 d-flex flex-row justify-content-end">
+                    @if (User.Identity?.IsAuthenticated ?? false) {
+                        <a class="btn btn-outline-light m-1" asp-controller="Cart" asp-action="Index">
+                            Booking
+                        </a>
+                    }
+                    <div class="w-auto d-flex flex-row justify-content-end">
+                        @if (User.Identity?.IsAuthenticated ?? false) {
+                            <a class="btn btn-outline-light m-1" asp-controller="Account" asp-action="Profile">Profile</a>
+                            <a class="btn btn-danger m-1" asp-controller="Account" asp-action="Logout">Logout</a>
 
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                        <a class="dropdown-item" asp-controller="Event" asp-action="Index">
-                            Events
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" asp-controller="Booking" asp-action="Index">
-                            Bookings
-                        </a>
-                    </li>
-                </ul>
+                            if (User.IsInRole("Admin")) {
+                                <div class="dropdown m-1">
+                                    <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Admin
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Event" asp-action="Index">
+                                                Events
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Booking" asp-action="Index">
+                                                Bookings
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                        } else {
+                            <a class="btn btn-success m-1" asp-controller="Account" asp-action="Login">Login</a>
+                            <a class="btn btn-primary m-1" asp-controller="Account" asp-action="Register">Register</a>
+                        }
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
 
     <main class="container-fluid mt-4">
-        <div class="row">
-            <aside class="col-12 col-md-3 col-lg-2 mb-3">
-                @await Component.InvokeAsync("NavigationMenu")
-            </aside>
+        <div class="container">
+            <div class="row">
+                <aside class="col-12 col-md-3 col-lg-2 mb-3">
+                    @await Component.InvokeAsync("NavigationMenu")
+                </aside>
 
-            <section class="col-12 col-md-9 col-lg-10">
-                @RenderBody()
-            </section>
+                <section class="col-12 col-md-9 col-lg-10">
+                    @RenderBody()
+                </section>
+            </div>
         </div>
     </main>
 
@@ -63,5 +81,7 @@
     </footer>
 
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

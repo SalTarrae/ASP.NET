@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TicketBooking.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TicketBooking.Data.Repositories;
 using TicketBooking.Models.ViewModels;
 
 namespace TicketBooking.Controllers {
@@ -11,6 +12,7 @@ namespace TicketBooking.Controllers {
 			_repository = repository;
 		}
 
+		[AllowAnonymous]
 		public IActionResult Index(string? location, int pageNum = 1) {
 			var query = _repository.Events;
 

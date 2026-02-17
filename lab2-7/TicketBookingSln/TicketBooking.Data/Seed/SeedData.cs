@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TicketBooking.Data.Contexts;
+using TicketBooking.Data.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace TicketBooking.Models {
+namespace TicketBooking.Data.Seed {
 	public class SeedData {
 		public static void EnsurePopulated(IApplicationBuilder app) {
 			using var scope = app.ApplicationServices.CreateScope();

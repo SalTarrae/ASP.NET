@@ -1,4 +1,7 @@
-﻿namespace TicketBooking.Models {
+﻿using TicketBooking.Data.Contexts;
+using TicketBooking.Data.Models;
+
+namespace TicketBooking.Data.Repositories {
 	public class EFEventRepository : IEventRepository {
 		private readonly TicketBookingDbContext _context;
 

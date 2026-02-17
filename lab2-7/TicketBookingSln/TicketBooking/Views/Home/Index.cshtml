@@ -1,4 +1,5 @@
-﻿@model TicketBooking.Models.ViewModels.EventsListViewModel
+﻿@using TicketBooking.Data.Models
+@model TicketBooking.Models.ViewModels.EventsListViewModel
 
 <div class="row">
     @foreach (var e in Model.Events ?? Enumerable.Empty<Event>()) {

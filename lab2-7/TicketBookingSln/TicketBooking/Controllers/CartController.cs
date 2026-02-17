@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TicketBooking.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TicketBooking.Data.Models;
+using TicketBooking.Data.Repositories;
+using TicketBooking.Infrastructure;
 
 namespace TicketBooking.Controllers {
 	public class CartController : Controller {
@@ -11,10 +14,12 @@ namespace TicketBooking.Controllers {
 			_cart = cart;
 		}
 
+		[AllowAnonymous]
 		public IActionResult Index() {
 			return View(_cart);
 		}
 
+		[Authorize]
 		[HttpPost]
 		public IActionResult AddToCart(long eventId, string? returnUrl) {
 			var ev = _repository.Events.FirstOrDefault(e => e.EventId == eventId);
@@ -26,6 +31,7 @@ namespace TicketBooking.Controllers {
 			return RedirectToAction("Index", new { returnUrl });
 		}
 
+		[Authorize]
 		[HttpPost]
 		public IActionResult RemoveFromCart(long eventId, string? returnUrl) {
 			_cart.RemoveLine(eventId);
@@ -34,6 +40,7 @@ namespace TicketBooking.Controllers {
 			return RedirectToAction("Index", new { returnUrl });
 		}
 
+		[Authorize]
 		[HttpPost]
 		public IActionResult Clear(string? returnUrl) {
 			_cart.Clear();

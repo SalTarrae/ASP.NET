@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TicketBooking.Models;
+using TicketBooking.Data.Models;
+using TicketBooking.Data.Repositories;
 
 namespace TicketBooking.Controllers {
+	[Authorize(Roles = "Admin")]
 	public class BookingController : Controller {
 		private readonly IBookingRepository _bookingRepo;
 		private readonly IEventRepository _eventRepo;
@@ -12,11 +15,13 @@ namespace TicketBooking.Controllers {
 			_eventRepo = eventRepo;
 		}
 
+		[Authorize]
 		public IActionResult Index() {
 			var data = _bookingRepo.Bookings.OrderByDescending(b => b.BookingId).ToList();
 			return View(data);
 		}
 
+		[Authorize]
 		public IActionResult Details(long id) {
 			var booking = _bookingRepo.Bookings.FirstOrDefault(b => b.BookingId == id);
 			if (booking == null)
@@ -24,12 +29,14 @@ namespace TicketBooking.Controllers {
 			return View(booking);
 		}
 
+		[Authorize]
 		[HttpGet]
 		public IActionResult Create() {
 			ViewBag.Events = new SelectList(_eventRepo.Events.ToList(), "EventId", "Title");
 			return View(new Booking());
 		}
 
+		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult Create(Booking model) {
@@ -42,6 +49,7 @@ namespace TicketBooking.Controllers {
 			return RedirectToAction(nameof(Index));
 		}
 
+		[Authorize]
 		[HttpGet]
 		public IActionResult Edit(long id) {
 			var booking = _bookingRepo.Bookings.FirstOrDefault(b => b.BookingId == id);
@@ -52,6 +60,7 @@ namespace TicketBooking.Controllers {
 			return View(booking);
 		}
 
+		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult Edit(Booking model) {
@@ -64,6 +73,7 @@ namespace TicketBooking.Controllers {
 			return RedirectToAction(nameof(Index));
 		}
 
+		[Authorize]
 		[HttpGet]
 		public IActionResult Delete(long id) {
 			var booking = _bookingRepo.Bookings.FirstOrDefault(b => b.BookingId == id);
@@ -72,6 +82,7 @@ namespace TicketBooking.Controllers {
 			return View(booking);
 		}
 
+		[Authorize]
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public IActionResult DeleteConfirmed(long id) {
