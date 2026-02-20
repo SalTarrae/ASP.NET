@@ -1,4 +1,5 @@
-﻿@model Booking
+﻿@using TicketBooking.Data.Models
+@model Booking
 
 <form asp-action="@ViewContext.RouteData.Values["action"]" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>

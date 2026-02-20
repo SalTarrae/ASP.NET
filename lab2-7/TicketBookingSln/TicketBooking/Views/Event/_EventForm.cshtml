@@ -1,4 +1,5 @@
-﻿@model Event
+﻿@using TicketBooking.Data.Models
+@model Event
 
 <form asp-action="@ViewContext.RouteData.Values["action"]" method="post">
     @Html.AntiForgeryToken()

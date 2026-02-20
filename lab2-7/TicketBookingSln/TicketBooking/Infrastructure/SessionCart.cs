@@ -1,6 +1,7 @@
-﻿using TicketBooking.Infrastructure;
+﻿
+using TicketBooking.Data.Models;
 
-namespace TicketBooking.Models {
+namespace TicketBooking.Infrastructure {
 	public class SessionCart : Cart {
 		public static Cart GetCart(IServiceProvider services) {
 			var session = services.GetRequiredService<IHttpContextAccessor>()

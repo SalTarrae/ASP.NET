@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TicketBooking.Infrastructure {
+namespace TicketBooking.Data.Infrastructure {
 	public class FutureDateAttribute : ValidationAttribute {
 		public override bool IsValid(object? value) {
 			if (value is not DateTime dt)

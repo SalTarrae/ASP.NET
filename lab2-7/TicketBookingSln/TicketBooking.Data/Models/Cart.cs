@@ -1,4 +1,4 @@
-﻿namespace TicketBooking.Models {
+﻿namespace TicketBooking.Data.Models {
 	public class Cart {
 		public List<CartLine> Lines { get; set; } = new();
 

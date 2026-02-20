@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TicketBooking.Infrastructure;
+using TicketBooking.Data.Infrastructure;
 
-namespace TicketBooking.Models {
+namespace TicketBooking.Data.Models {
 	public class Event {
 		public long? EventId { get; set; }
 		

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TicketBooking.Data.Models;
 
-namespace TicketBooking.Models {
+namespace TicketBooking.Data.Contexts {
 	public class TicketBookingDbContext : DbContext {
 		public TicketBookingDbContext(DbContextOptions<TicketBookingDbContext> options)
 			: base(options) { }

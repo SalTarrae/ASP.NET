@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="TicketBooking.Api/TicketBooking.Api.csproj" />
+  <Project Path="TicketBooking.Data/TicketBooking.Data.csproj" />
   <Project Path="TicketBooking/TicketBooking.csproj" />
 </Solution>

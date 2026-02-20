@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TicketBooking.Models {
+namespace TicketBooking.Data.Models {
 	public class Booking {
 		public long BookingId { get; set; }
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TicketBooking.Models;
+using TicketBooking.Data.Contexts;
 
 #nullable disable
 
@@ -17,12 +17,12 @@ namespace TicketBooking.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("ProductVersion", "10.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TicketBooking.Models.Booking", b =>
+            modelBuilder.Entity("TicketBooking.Data.Models.Booking", b =>
                 {
                     b.Property<long>("BookingId")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,7 @@ namespace TicketBooking.Migrations
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("TicketBooking.Models.Event", b =>
+            modelBuilder.Entity("TicketBooking.Data.Models.Event", b =>
                 {
                     b.Property<long>("EventId")
                         .ValueGeneratedOnAdd()
@@ -69,27 +69,30 @@ namespace TicketBooking.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.HasKey("EventId");
 
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("TicketBooking.Models.Booking", b =>
+            modelBuilder.Entity("TicketBooking.Data.Models.Booking", b =>
                 {
-                    b.HasOne("TicketBooking.Models.Event", "Event")
+                    b.HasOne("TicketBooking.Data.Models.Event", "Event")
                         .WithMany("Bookings")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -98,7 +101,7 @@ namespace TicketBooking.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("TicketBooking.Models.Event", b =>
+            modelBuilder.Entity("TicketBooking.Data.Models.Event", b =>
                 {
                     b.Navigation("Bookings");
                 });

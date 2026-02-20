@@ -1,4 +1,6 @@
-﻿namespace TicketBooking.Models {
+﻿using TicketBooking.Data.Models;
+
+namespace TicketBooking.Data.Repositories {
 	public interface IBookingRepository {
 		IQueryable<Booking> Bookings { get; }
 
