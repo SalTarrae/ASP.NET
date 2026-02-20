@@ -11,20 +11,20 @@ namespace TicketBooking.Data.Repositories {
 		}
 
 		public IQueryable<Booking> Bookings =>
-			_context.Bookings.Include(b => b.Event);
+			_context.Bookings.Include(booking => booking.Event);
 
-		public void CreateBooking(Booking b) {
-			_context.Bookings.Add(b);
+		public void CreateBooking(Booking booking) {
+			_context.Bookings.Add(booking);
 			_context.SaveChanges();
 		}
 
-		public void UpdateBooking(Booking b) {
-			_context.Bookings.Update(b);
+		public void UpdateBooking(Booking booking) {
+			_context.Bookings.Update(booking);
 			_context.SaveChanges();
 		}
 
-		public void DeleteBooking(Booking b) {
-			_context.Bookings.Remove(b);
+		public void DeleteBooking(Booking booking) {
+			_context.Bookings.Remove(booking);
 			_context.SaveChanges();
 		}
 	}

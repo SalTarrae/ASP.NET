@@ -11,18 +11,18 @@ namespace TicketBooking.Data.Repositories {
 
 		public IQueryable<Event> Events => _context.Events;
 
-		public void CreateEvent(Event e) {
-			_context.Events.Add(e);
+		public void CreateEvent(Event ev) {
+			_context.Events.Add(ev);
 			_context.SaveChanges();
 		}
 
-		public void UpdateEvent(Event e) {
-			_context.Events.Update(e);
+		public void UpdateEvent(Event ev) {
+			_context.Events.Update(ev);
 			_context.SaveChanges();
 		}
 
-		public void DeleteEvent(Event e) {
-			_context.Events.Remove(e);
+		public void DeleteEvent(Event ev) {
+			_context.Events.Remove(ev);
 			_context.SaveChanges();
 		}
 	}

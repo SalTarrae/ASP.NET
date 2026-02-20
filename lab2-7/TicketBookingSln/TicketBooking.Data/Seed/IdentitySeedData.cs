@@ -26,6 +26,15 @@ namespace TicketBooking.Data.Seed {
 				if (res.Succeeded)
 					await userManager.AddToRoleAsync(admin, AdminRole);
 			}
+
+			var userEmail = "user@ticketbooking.local";
+			var user = await userManager.FindByEmailAsync(userEmail);
+			if (user == null) {
+				user = new IdentityUser { UserName = userEmail, Email = userEmail };
+				var res = await userManager.CreateAsync(user, "User1234");
+				if (res.Succeeded)
+					await userManager.AddToRoleAsync(user, UserRole);
+			}
 		}
 	}
 }
