@@ -1,0 +1,12 @@
+﻿@page "/logout"
+@inject TicketBooking.Client.Services.AuthService Auth
+@inject NavigationManager Nav
+
+<p>Signing out...</p>
+
+@code {
+    protected override async Task OnInitializedAsync() {
+        await Auth.LogoutAsync();
+        Nav.NavigateTo("/login?returnUrl=/", true);
+    }
+}

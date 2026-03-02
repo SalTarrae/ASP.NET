@@ -1,0 +1,67 @@
+﻿@page "/login"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.WebUtilities
+@inject TicketBooking.Client.Services.AuthService Auth
+@inject NavigationManager Nav
+
+<h3>Login</h3>
+
+@if (!string.IsNullOrWhiteSpace(error)) {
+    <div class="alert alert-danger">@error</div>
+}
+
+<EditForm Model="model" OnValidSubmit="DoLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-2">
+        <label>Email</label>
+        <InputText class="form-control" @bind-Value="model.Email" />
+    </div>
+
+    <div class="mb-2">
+        <label>Password</label>
+        <InputText class="form-control" type="password" @bind-Value="model.Password" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Login</button>
+</EditForm>
+
+@code {
+    private string? error;
+    private string? returnUrl;
+
+    private LoginForm model = new();
+
+    private class LoginForm {
+        [Required, EmailAddress]
+        public string Email { get; set; } = "";
+
+        [Required]
+        public string Password { get; set; } = "";
+    }
+
+    protected override void OnInitialized() {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("returnUrl", out var ru))
+            returnUrl = ru.ToString();
+    }
+
+    private async Task DoLogin() {
+        error = null;
+
+        var ok = await Auth.LoginAsync(model.Email, model.Password);
+        if (!ok) {
+            error = "Invalid email or password";
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(returnUrl)) {
+            Nav.NavigateTo(returnUrl);
+        } else {
+            Nav.NavigateTo("/events");
+        }
+    }
+}

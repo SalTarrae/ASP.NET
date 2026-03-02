@@ -1,0 +1,11 @@
+﻿@inject TicketBooking.Client.Services.AuthService Auth
+
+<span class="badge bg-secondary">@status</span>
+
+@code {
+    private string status = "Auth: ...";
+
+    protected override async Task OnInitializedAsync() {
+        status = (await Auth.IsAuthenticatedAsync()) ? "Auth: ON" : "Auth: OFF";
+    }
+}

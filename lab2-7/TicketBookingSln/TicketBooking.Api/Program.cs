@@ -76,10 +76,19 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddCors(options => {
+	options.AddPolicy("BlazorClient", p =>
+		p.AllowAnyOrigin()
+		 .AllowAnyMethod()
+		 .AllowAnyHeader());
+});
+
 builder.Services.AddScoped<IEventRepository, EFEventRepository>();
 builder.Services.AddScoped<IBookingRepository, EFBookingRepository>();
 
 var app = builder.Build();
+
+app.UseCors("BlazorClient");
 
 app.UseSwagger();
 app.UseSwaggerUI();

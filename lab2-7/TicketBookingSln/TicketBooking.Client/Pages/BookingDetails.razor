@@ -1,0 +1,83 @@
+﻿@page "/bookings/{id:long}"
+@using System.Net
+@using System.Net.Http.Json
+@using TicketBooking.Client.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<AuthGuard>
+    <h3>Booking Details</h3>
+
+    @if (!string.IsNullOrWhiteSpace(error))
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+
+    @if (model is null && error is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else if (model is not null)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Booking #@model.BookingId</h5>
+
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Customer</dt>
+                    <dd class="col-sm-9">@model.CustomerName</dd>
+
+                    <dt class="col-sm-3">Email</dt>
+                    <dd class="col-sm-9">@model.CustomerEmail</dd>
+
+                    <dt class="col-sm-3">Quantity</dt>
+                    <dd class="col-sm-9">@model.Quantity</dd>
+
+                    <dt class="col-sm-3">Event</dt>
+                    <dd class="col-sm-9">@model.EventTitle</dd>
+
+                    <dt class="col-sm-3">Created</dt>
+                    <dd class="col-sm-9">@model.CreatedAtUtc.ToString("u")</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <button class="btn btn-secondary" @onclick='() => Nav.NavigateTo("/bookings")'>Back</button>
+        </div>
+    }
+</AuthGuard>
+
+@code {
+    [Parameter] public long id { get; set; }
+
+    private BookingDto? model;
+    private string? error;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        error = null;
+        model = null;
+
+        var resp = await Http.GetAsync($"api/bookings/{id}");
+        if (resp.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            Nav.NavigateTo("/login");
+            return;
+        }
+
+        if (resp.StatusCode == HttpStatusCode.NotFound)
+        {
+            Nav.NavigateTo("/not-found");
+            return;
+        }
+
+        if (!resp.IsSuccessStatusCode)
+        {
+            error = $"Load failed: {resp.StatusCode}";
+            return;
+        }
+
+        model = await resp.Content.ReadFromJsonAsync<BookingDto>();
+    }
+}
