@@ -1,0 +1,91 @@
+﻿@using TicketBooking.Client.Services
+@implements IDisposable
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">TicketBooking</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="nav flex-column">
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span>
+                Home
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="events">
+                <span class="bi bi-calendar-event-nav-menu" aria-hidden="true"></span>
+                Events
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="bookings">
+                <span class="bi bi-ticket-perforated-nav-menu" aria-hidden="true"></span>
+                Bookings
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3 mt-2">
+            @if (isAuthenticated) {
+                <NavLink class="nav-link" href="logout">
+                    <span class="bi bi-box-arrow-right-nav-menu" aria-hidden="true"></span>
+                    Logout
+                </NavLink>
+            } else {
+                <NavLink class="nav-link" href="login">
+                    <span class="bi bi-box-arrow-in-right-nav-menu" aria-hidden="true"></span>
+                    Login
+                </NavLink>
+                <NavLink class="nav-link" href="register">
+                    <span class="bi bi-person-plus-nav-menu" aria-hidden="true"></span>
+                    Register
+                </NavLink>
+            }
+        </div>
+
+        <div class="nav-item px-3 mt-2">
+            <span class="badge bg-secondary">Auth: @(isAuthenticated ? "ON" : "OFF")</span>
+        </div>
+
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool isAuthenticated;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    protected override async Task OnInitializedAsync() {
+        Nav.LocationChanged += OnLocationChanged;
+        await RefreshAuthState();
+    }
+
+    private async void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e) {
+        await RefreshAuthState();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RefreshAuthState() {
+        isAuthenticated = await Auth.IsAuthenticatedAsync();
+    }
+
+    private void ToggleNavMenu() {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    public void Dispose() {
+        Nav.LocationChanged -= OnLocationChanged;
+    }
+}

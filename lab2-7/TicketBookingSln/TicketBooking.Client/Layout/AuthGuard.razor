@@ -1,0 +1,25 @@
+﻿@inject TicketBooking.Client.Services.AuthService Auth
+@inject NavigationManager Nav
+
+@if (!checkedAuth) {
+    <p><em>Checking authorization...</em></p>
+} else {
+    @ChildContent
+}
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool checkedAuth = false;
+
+    protected override async Task OnInitializedAsync() {
+        var ok = await Auth.IsAuthenticatedAsync();
+        if (!ok) {
+            var returnUrl = Uri.EscapeDataString(Nav.Uri);
+            Nav.NavigateTo($"/login?returnUrl={returnUrl}");
+            return;
+        }
+
+        checkedAuth = true;
+    }
+}

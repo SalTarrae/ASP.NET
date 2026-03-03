@@ -1,0 +1,232 @@
+﻿@page "/bookings"
+@using System.Net
+@using System.Net.Http.Json
+@using TicketBooking.Client.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<AuthGuard>
+    <h3>Bookings</h3>
+
+    @if (!string.IsNullOrWhiteSpace(success)) {
+        <div class="alert alert-success">@success</div>
+    }
+    @if (!string.IsNullOrWhiteSpace(error)) {
+        <div class="alert alert-danger">@error</div>
+    }
+
+    @if (bookings is null || events is null) {
+        <p><em>Loading...</em></p>
+    } else {
+        <div class="row">
+            <div class="col-12 col-lg-7">
+                <table class="table table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Email</th>
+                            <th>Event</th>
+                            <th class="text-center">Qty</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var b in bookings) {
+                            <tr class="@(editingId == b.BookingId ? "table-warning" : "")">
+                                <td>@b.CustomerName</td>
+                                <td>@b.CustomerEmail</td>
+                                <td>@b.EventTitle</td>
+                                <td class="text-center">@b.Quantity</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-secondary me-2"
+                                            @onclick='() => Nav.NavigateTo($"/bookings/{b.BookingId}")'>
+                                        Details
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-primary me-2"
+                                            @onclick="() => StartEdit(b.BookingId)">
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            @onclick="() => DeleteBooking(b.BookingId)">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-12 col-lg-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@FormTitle</h5>
+
+                        <EditForm Model="form" OnValidSubmit="SubmitForm">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="mb-2">
+                                <label class="form-label">Customer Name</label>
+                                <InputText class="form-control" @bind-Value="form.CustomerName" />
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label">Customer Email</label>
+                                <InputText class="form-control" @bind-Value="form.CustomerEmail" />
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label">Event</label>
+                                <InputSelect class="form-select" @bind-Value="form.EventId">
+                                    <option value="0">-- select event --</option>
+                                    @foreach (var e in events) {
+                                        <option value="@e.EventId">@e.Title (@e.Location)</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Quantity</label>
+                                <InputNumber class="form-control" @bind-Value="form.Quantity" />
+                            </div>
+
+                            <button class="btn btn-primary" type="submit">@SubmitButtonText</button>
+                            <button class="btn btn-secondary ms-2" type="button" @onclick="ResetForm">Cancel</button>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</AuthGuard>
+
+@code {
+    private List<BookingDto>? bookings;
+    private List<EventDto>? events;
+
+    private string? success;
+    private string? error;
+
+    private long? editingId = null;
+    private BookingCreateUpdateDto form = NewForm();
+
+    private string FormTitle => editingId is null ? "Create Booking" : $"Edit Booking (ID: {editingId})";
+    private string SubmitButtonText => editingId is null ? "Create" : "Save";
+
+    protected override async Task OnInitializedAsync() {
+        await Reload();
+    }
+
+    private static BookingCreateUpdateDto NewForm()
+        => new() { Quantity = 1 };
+
+    private void SetMessage(string? ok = null, string? err = null) {
+        success = ok;
+        error = err;
+    }
+
+    private async Task Reload() {
+        SetMessage(null, null);
+
+        var evResp = await Http.GetAsync("api/events");
+        if (evResp.StatusCode == HttpStatusCode.Unauthorized) {
+            Nav.NavigateTo("/login");
+            return;
+        }
+        if (!evResp.IsSuccessStatusCode) {
+            SetMessage(null, $"Load events failed: {evResp.StatusCode}");
+            return;
+        }
+        events = await evResp.Content.ReadFromJsonAsync<List<EventDto>>();
+
+        var bResp = await Http.GetAsync("api/bookings");
+        if (bResp.StatusCode == HttpStatusCode.Unauthorized) {
+            Nav.NavigateTo("/login");
+            return;
+        }
+        if (!bResp.IsSuccessStatusCode) {
+            SetMessage(null, $"Load bookings failed: {bResp.StatusCode}");
+            return;
+        }
+        bookings = await bResp.Content.ReadFromJsonAsync<List<BookingDto>>();
+    }
+
+    private void StartEdit(long id) {
+        SetMessage(null, null);
+
+        var b = bookings?.FirstOrDefault(x => x.BookingId == id);
+        if (b == null)
+            return;
+
+        editingId = id;
+        form = new BookingCreateUpdateDto {
+            CustomerName = b.CustomerName,
+            CustomerEmail = b.CustomerEmail,
+            Quantity = b.Quantity,
+            EventId = b.EventId
+        };
+    }
+
+    private void ResetForm() {
+        editingId = null;
+        form = NewForm();
+        SetMessage(null, null);
+    }
+
+    private async Task SubmitForm() {
+        SetMessage(null, null);
+
+        HttpResponseMessage resp;
+
+        if (editingId is null) {
+            resp = await Http.PostAsJsonAsync("api/bookings", form);
+        } else {
+            resp = await Http.PutAsJsonAsync($"api/bookings/{editingId}", form);
+        }
+
+        if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+            Nav.NavigateTo("/login");
+            return;
+        }
+
+        if (!resp.IsSuccessStatusCode) {
+            SetMessage(null, $"Save failed: {resp.StatusCode}");
+            return;
+        }
+
+        SetMessage(editingId is null ? "Booking created" : "Booking updated", null);
+
+        ResetForm();
+        await Reload();
+    }
+
+    private async Task DeleteBooking(long id) {
+        if (!await Confirm($"Delete booking #{id}?"))
+            return;
+
+        SetMessage(null, null);
+
+        var resp = await Http.DeleteAsync($"api/bookings/{id}");
+
+        if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+            Nav.NavigateTo("/login");
+            return;
+        }
+
+        if (!resp.IsSuccessStatusCode) {
+            SetMessage(null, $"Delete failed: {resp.StatusCode}");
+            return;
+        }
+
+        SetMessage("Booking deleted", null);
+
+        if (editingId == id)
+            ResetForm();
+        await Reload();
+    }
+
+    private async Task<bool> Confirm(string message)
+        => await JS.InvokeAsync<bool>("confirm", message);
+}
