@@ -168,7 +168,7 @@ dotnet ef database update --project TicketBookingSln/TicketBooking.Data
 
 ## License
 
-See [MIT LICENSE]([https://github.com/SalTarrae/ASP.NET/blob/master/LICENSE](https://github.com/SalTarrae/ASP.NET?tab=MIT-1-ov-file)) in the repository root.
+See [MIT LICENSE](https://github.com/SalTarrae/ASP.NET?tab=MIT-1-ov-file) in the repository root.
 
 ---
 
